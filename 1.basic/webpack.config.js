@@ -34,10 +34,11 @@ module.exports = {
             options: {
               url: true,
               import: true,  // 解决文件中的 @import
-              module: true, // import styles from '...' 就是样式像组件那样子引入
+              // module: false, // import styles from '...' 就是样式像组件那样子引入
               // esModule: true, .default
             }
-          } // 会读取源CSS文件，并且自动可以识别里面的import语句并把对应的CSS内容合并过来
+          }, // 会读取源CSS文件，并且自动可以识别里面的import语句并把对应的CSS内容合并过来
+          'postcss-loader'
         ]
       },
       {
