@@ -57,6 +57,27 @@ module.exports = {
           'sass-loader'
         ]
       },
+      {
+        test: /.png$/,
+        type: 'asset/resource' // webpack5新增的功能  -> file-loader
+      },
+      {
+        test: /.ico$/,
+        type: 'asset/inline'  // webpack5新增的功能  -> url-loader 内容变成base64返回
+      },
+      {
+        test: /.txt$/,
+        type: 'asset/source'  // webpack5新增的功能  -> raw-loader 读取文件的原始内容
+      },
+      {
+        test: /\.jpg$/,
+        type: 'asset', // 如果只写asset, 不写/inline /resource 会自动根据文件的大小进行选择处理
+        parser: { // 如果文件大于4k的话，就会产生一个新的文件，并返回新文件的路径， 如果小于4k的话返回的内容的base64字符串
+          dataUrlCondition: {
+            maxSize: 4 * 1024
+          }
+        }
+      }
     ]
   },
   plugins: [
