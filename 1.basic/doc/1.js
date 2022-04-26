@@ -1,0 +1,1 @@
+console.log(require('dotenv').config({debug: true}).parsed) // 这个库一般在脚手架中都会引入这个库
