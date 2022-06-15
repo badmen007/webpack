@@ -1,14 +1,14 @@
 
 // 转换箭头函数
-
 const babel = require('@babel/core');
 const types = require('@babel/types');
 const transformEs2015ArrowFunctions = require('babel-plugin-transform-es2015-arrow-functions')
-// 所谓的babel插件其实既是一个对象，里面会有一个visitor属性 
+// 所谓的babel插件其实既是一个对象，里面会有一个visitor属性 值
 const transformEs2015ArrowFunctions2 = {
   visitor: {
     ArrowFunctionExpression(path) {
       const { node } = path;
+      // 提升函数的环境
       hoistFunctionEnvironment(path);
       node.type = 'FunctionExpression';
       // 解决如果没有写{}的这种情况
@@ -27,13 +27,13 @@ function hoistFunctionEnvironment(path) {
     // 确定父节点是函数并且不是箭头函数
     return (parent.isFunction() && !path.isArrowFunctionExpress()) || parent.isProgram();
   })
-  let thisBindings = '_this';
-  let thisPaths = getThisPaths(path);
+  const thisBindings = '_this';
+  const thisPaths = getThisPaths(path);
   if(thisPaths.length > 0) {
     if(!thisEnv.scope.hasBinding(thisBindings)) {
       thisEnv.scope.push({
-        id: types.identifier(thisBindings), // 这个就是键
-        init: types.thisExpression() // 这个就是值
+        id: types.identifier(thisBindings), // 这个就是键  变量名
+        init: types.thisExpression() // 这个就是值 变量值
       })
     }
   }
@@ -54,10 +54,7 @@ function getThisPaths(path) {
 }
 
 const sourceCode = `
-const sum = (a, b) => {
-  console.log(this);
-  return a + b;
-}
+const sum = (a, b) => a+b;
 `;
 const result = babel.transform(sourceCode, {
   plugins: [transformEs2015ArrowFunctions2]

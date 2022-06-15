@@ -5,45 +5,32 @@ const types = require('@babel/types');
 const transformClasses = {
   visitor: {
     ClassDeclaration(path) {
-      let node = path.node;
-      let id = node.id;//Identifier name:Person
-      let methods = node.body.body;//Array<MethodDefinition>
-      let nodes = []
-
-      methods.forEach(method => {
-        if (method.kind === 'constructor') { // 判断是不是构造函数
-            let constructorFunction = types.functionDeclaration(
-                id,
-                method.params,
-                method.body
-            );
-            nodes.push(constructorFunction);
-        } else {
-            let memberExpression = types.memberExpression(
-                types.memberExpression(
-                    id, types.identifier('prototype')
-                ), method.key
-            )
-            let functionExpression = types.functionExpression(
-                null,
-                method.params,
-                method.body
-            )
-            let assignmentExpression = types.assignmentExpression(
-                '=',
-                memberExpression,
-                functionExpression
-            );
-            nodes.push(assignmentExpression);
+      const { node } = path;
+      const {id} = node;
+      const classMethods = node.body.body;
+      const newNodes = [];
+      classMethods.forEach(classMethod => {
+        if(classMethod.kind === 'constructor') {
+          const constructor = types.functionExpression(id, classMethod.params, classMethod.body)
+          newNodes.push(constructor);
+        }else{
+          const assignmentExpression = types.assignmentExpression(
+            '=',
+            types.memberExpression(
+              types.memberExpression(
+                id, types.identifier('prototype')
+              ),
+              classMethod.key  // 这个就是声明变量的那个key 实际上就是getName
+            ),
+            types.functionExpression(null, classMethod.params, classMethod.body),
+          )
+          newNodes.push(assignmentExpression)
         }
-      });
-      if (nodes.length === 1) {
-        //单节点用replaceWith
-        //path代表路径，用nodes[0]这个新节点替换旧path上现有老节点node ClassDeclaration
-        path.replaceWith(nodes[0]);
-      } else {
-          //多节点用replaceWithMultiple
-          path.replaceWithMultiple(nodes);
+      })
+      if(newNodes.length === 1) {
+        path.replaceWith(newNodes[0])
+      }else{
+        path.replaceWithMultiple(newNodes);
       }
     }
   }
