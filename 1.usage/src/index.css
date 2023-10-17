@@ -1,3 +1,8 @@
+@import './bg.css';
+
 body {
   color: red;
+  background-image: url('./images/tom.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
