@@ -38,6 +38,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.txt$/,
+        type: 'asset/source'
+      },
+      {
         test: /\.(png|jpg)$/,
         // type: 'asset/resource', // 会在打包输出的目录下写入图片文件
         // type: 'asset/inline', // 生成一个base64图片
