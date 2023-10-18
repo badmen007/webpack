@@ -12,7 +12,7 @@ module.exports = {
   mode: "development",
   devtool: false,
   // entry: "./src/index.js",
-  entry: "./src/index.ts",
+  entry: "./src/index.js",
   // 多入口
   // entry: {
   //   entry1: "./src/entry1.js",
@@ -37,6 +37,18 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.(png|jpg)$/,
+        // type: 'asset/resource', // 会在打包输出的目录下写入图片文件
+        // type: 'asset/inline', // 生成一个base64图片
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            // 如果图片的大小小于maxSize的话，就转换成base64, 否则就将图片放到打包的目录下
+            maxSize: 1024 * 2
+          }
+        }
+      },
       {
         test: /\.ts$/,
         // use: [ 有点慢
@@ -94,7 +106,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin(),
     new EslintWebpackPlugin({
-      extensions: ['.ts', '.js']
+      extensions: [".ts", ".js"],
     }),
     // 多入口打包
     // new HtmlWebpackPlugin({

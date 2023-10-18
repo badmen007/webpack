@@ -1,3 +1,4 @@
+import png from './images/png.png'
+import jpg from './images/jpg.jpg'
 
-let sum = (a, b) => a + b
-console.log(sum(1,2))
+console.log(png, jpg)
