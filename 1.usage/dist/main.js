@@ -1,7 +1,7 @@
 /******/ (function() { // webpackBootstrap
 var __webpack_exports__ = {};
 /*!**********************!*\
-  !*** ./src/index.ts ***!
+  !*** ./src/index.js ***!
   \**********************/
 var minus = function minus(a, b) {
   return a + b;

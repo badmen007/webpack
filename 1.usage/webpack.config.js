@@ -3,7 +3,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 // 默认不配置的话css文件会打包到js文件中，文件大的话会影响渲染，这个插件可以把css单独打包成一个文件，然后通过外链的形式引入到js中
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const EslintWebpackPlugin = require('eslint-webpack-plugin')
+const EslintWebpackPlugin = require("eslint-webpack-plugin");
 
 const NODE_ENV = process.env.NODE_ENV;
 console.log(NODE_ENV);
@@ -39,20 +39,85 @@ module.exports = {
     rules: [
       {
         test: /\.txt$/,
-        type: 'asset/source'
+        type: "asset/source",
       },
+      // {
+      //   test: /\.(png|jpg)$/,
+      //   // type: 'asset/resource', // 会在打包输出的目录下写入图片文件
+      //   // type: 'asset/inline', // 生成一个base64图片
+      //   type: "asset",
+      //   parser: {
+      //     dataUrlCondition: {
+      //       // 如果图片的大小小于maxSize的话，就转换成base64, 否则就将图片放到打包的目录下
+      //       maxSize: 1024 * 2,
+      //     },
+      //   },
+      // },
       {
+        // 图片自适应
         test: /\.(png|jpg)$/,
-        // type: 'asset/resource', // 会在打包输出的目录下写入图片文件
-        // type: 'asset/inline', // 生成一个base64图片
-        type: "asset",
-        parser: {
-          dataUrlCondition: {
-            // 如果图片的大小小于maxSize的话，就转换成base64, 否则就将图片放到打包的目录下
-            maxSize: 1024 * 2
-          }
-        }
+        oneOf: [
+          {
+            resourceQuery: /sizes/,
+            use: [
+              {
+                loader: "responsive-loader",
+                options: {
+                  // sizes: [300, 600, 1024],
+                  adapter: require("responsive-loader/jimp"),
+                },
+              },
+            ],
+          },
+          {
+            type: "asset/resource",
+          },
+        ],
       },
+      // {
+      //   // 图片压缩 这个插件安装的时候报错问题没解决 导致打包报错
+      //   test: /\.(jpe?g|png|gif|svg)$/i,
+      //   use: [
+      //     {
+      //       // 使用image-webpack-loader对图片进行优化和压缩
+      //       loader: "image-webpack-loader",
+      //       options: {
+      //         // 是否禁用图片优化和压缩
+      //         disable: process.env.NODE_ENV === "development",
+      //         mozjpeg: {
+      //           progressive: true, // 是否开启渐进式JPEG，可以有效提升JPEG图片加载速度
+      //           quality: 65, // 压缩JPEG图片的质量，取值范围为0到100，值越大质量越好但文件越大
+      //         },
+      //         optipng: {
+      //           enabled: true, // 是否开启PNG图片的优化，可以有效提升PNG图片加载速度
+      //         },
+      //         pngquant: {
+      //           // 压缩PNG图片的质量范围，取值范围为0到1，值越大质量越好但文件越大
+      //           // 第一个数字表示压缩质量的下限，第二个数字表示压缩质量的上限
+      //           quality: [0.65, 0.9],
+      //           speed: 4, // 压缩PNG图片的速度，取值范围为1到10，值越大速度越快但质量越低
+      //         },
+      //         svgo: {
+      //           plugins: [
+      //             // 压缩SVG图片的插件列表，这里包含removeViewBox和cleanupIDs两个插件
+      //             {
+      //               //用于删除SVG图片中的viewBox属性
+      //               //viewBox属性是用来指定SVG视口范围的，它的值是一个矩形框的坐标和宽高
+      //               removeViewBox: false,
+      //             },
+      //             {
+      //               //用于删除SVG图片中的无用ID属性
+      //               cleanupIDs: true,
+      //             },
+      //           ],
+      //         },
+      //         gifsicle: {
+      //           interlaced: true, // 是否开启GIF图片的隔行扫描,可以有效提升GIF图片加载速度
+      //         },
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.ts$/,
         // use: [ 有点慢
