@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // 默认不配置的话css文件会打包到js文件中，文件大的话会影响渲染，这个插件可以把css单独打包成一个文件，然后通过外链的形式引入到js中
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const EslintWebpackPlugin = require("eslint-webpack-plugin");
+// const SpritesmithPlugin = require("webpack-spritesmith"); // 这个是弄成雪碧图的插件
 
 const NODE_ENV = process.env.NODE_ENV;
 console.log(NODE_ENV);
@@ -11,12 +12,34 @@ const isProduction = NODE_ENV === "production";
 module.exports = {
   mode: "development",
   devtool: false,
-  // entry: "./src/index.js",
   entry: "./src/index.js",
+  // entry: ['./src/entry1.js', './src/entry2.js'],
   // 多入口
   // entry: {
   //   entry1: "./src/entry1.js",
   //   entry2: "./src/entry2.js",
+  // },
+  // entry: {
+  //   // vendor: './src/vendor.js',
+  //   // main: {
+  //   //   // 指定入口文件
+  //   //   import: './src/index.js',
+  //   //   // 声明该入口的前置依赖
+  //   //   // dependOn: 'vendor'
+  //   //   // 设置入口的runtime-chunk
+  //   //   // 这个runtime有啥用？打包出来的代码是commonjs 但是浏览器不能运行common.js所以需要实现一套common.js规范
+  //   //   // 如果这个值不设置，那么运行时代码会打包到bundle中
+  //   //   runtime: 'runtime-main'
+  //   // }
+  //   // 两个代码块的runtime会打包成一个
+  //   entry1: {
+  //     import: "./src/entry1.js",
+  //     runtime: "runtime",
+  //   },
+  //   entry2: {
+  //     import: "./src/entry2.js",
+  //     runtime: "runtime",
+  //   },
   // },
   output: {
     path: path.resolve(__dirname, "dist"), // 打包文件的绝对路径
@@ -34,6 +57,19 @@ module.exports = {
     // ],
     // 不管是访问那个路径，都会把请求重定向到index.html 交给前端路由来处理
     historyApiFallback: true, // 使用html5 history api的时候 要把index.html作为响应，交给前端路由处理
+    // proxy: {
+    //   "/api": {
+    //     target: "http://localhost:4000",
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   },
+    // },
+    onBeforeSetupMiddleware({app}) {
+      app.get('/api/users', (req, res) => {
+         res.json([{ id: 1, name: "232323" }]);
+      })
+    }
   },
   module: {
     rules: [
@@ -64,7 +100,7 @@ module.exports = {
                 loader: "responsive-loader",
                 options: {
                   // sizes: [300, 600, 1024],
-                  adapter: require("responsive-loader/jimp"),
+                  adapter: require("responsive-loader/sharp"),
                 },
               },
             ],
@@ -164,7 +200,14 @@ module.exports = {
           isProduction ? MiniCssExtractPlugin.loader : "style-loader",
           "css-loader",
           "postcss-loader", // 加浏览器厂商前缀
-          "less-loader",
+          {
+            loader: "less-loader",
+            options: {
+              lessOptions: {
+                paths: [path.resolve(__dirname, "src/spritesmith-generated")],
+              },
+            },
+          },
         ],
       },
     ],
