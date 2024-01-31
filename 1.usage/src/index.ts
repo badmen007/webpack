@@ -1,3 +1,2 @@
-
-const minus = (a: number, b: number) => a + b;
-console.log(minus(1, 2));
+const minus = (a:number, b:number): number => a + b
+console.log(minus(1, 2))

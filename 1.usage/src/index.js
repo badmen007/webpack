@@ -1,2 +1,2 @@
-import { vendor } from './vendor'
-console.log(vendor)
+let sum = (a, b) => a + b
+console.log(sum)

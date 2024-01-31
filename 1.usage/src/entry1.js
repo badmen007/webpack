@@ -1,2 +1,1 @@
-import './common'
-console.log('entry1')
+console.log("entry1");
