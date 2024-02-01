@@ -1,2 +1,3 @@
-let sum = (a, b) => a + b
-console.log(sum)
+import jpg from "./images/bg.jpg";
+console.log(jpg);
+

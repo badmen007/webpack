@@ -9,8 +9,8 @@ const isProduction = NODE_ENV === "production";
 module.exports = {
   mode: "development",
   devtool: false,
-  // entry: "./src/index.js",
-  entry: "./src/index.ts",
+  entry: "./src/index.js",
+  //entry: "./src/index.ts",
   //entry: ["./src/entry1.js", "./src/entry2.js"],
   // entry: {
   //   // entry如果是一个对象的话 打包出来的文件名就是以entry1和entry2来命名的
@@ -38,6 +38,21 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.txt$/,
+        type: "asset/source",
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        //type: "asset/resource",
+        type: "asset",
+        parser: {
+          // 如果图片的大小小于某个阀值，就是base64 大于某个阀值就是单独的文件
+          dataUrlCondition: {
+            maxSize: 1024,
+          },
+        },
+      },
       {
         test: /\.ts$/,
         use: [

@@ -119,6 +119,7 @@ rules: [
 ## eslint
 
 - 1. 插件引入
+
 ```js
 const EslintPlugin = require("eslint-webpack-plugin");
 ...
@@ -131,6 +132,7 @@ plugins: [
 ```
 
 - 2.`.eslintrc` 一些规则
+
 ```
 {
   "parser": "@typescript-eslint/parser",
@@ -141,3 +143,40 @@ plugins: [
 }
 
 ```
+
+## 图片 处理图片
+
+```js
+rules: [
+  {
+    test: /\.txt$/,
+    type: "asset/source",
+  },
+  {
+    test: /\.(jpg|png|svg)$/,
+    //type: "asset/resource",
+    type: "asset",
+    parser: {
+      // 如果图片的大小小于某个阀值，就是base64 大于某个阀值就是单独的文件
+      dataUrlCondition: {
+        maxSize: 1024,
+      },
+    },
+  },
+];
+```
+
+## 文本、字节流等
+
+```js
+rules: [
+  {
+    test: /\.txt$/,
+    type: "asset/source",
+  },
+  ...
+];
+
+```
+
+## 图片压缩
