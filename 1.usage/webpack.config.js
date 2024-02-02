@@ -35,6 +35,20 @@ module.exports = {
     //   "src/**/*.js",
     // ],
     historyApiFallback: true, // 处理单页面应用的路径问题
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:3000',
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   }
+    // },
+    // 可以实现mock
+    onBeforeSetupMiddleware({ app }) {
+      app.get("/api/users", (req, res) => {
+        res.json([{ id: 1, name: "xz" }]);
+      });
+    },
   },
   module: {
     rules: [
