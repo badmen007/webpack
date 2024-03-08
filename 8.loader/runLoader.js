@@ -1,10 +1,10 @@
-const { runLoaders } = require("loader-runner");
+const { runLoaders } = require("./loader-runner");
 const path = require("path");
 const fs = require("fs");
 
 const entryFile = path.resolve(__dirname, "src/index.js");
 // 两个行内loader
-const request = `!inline1-loader!inline2-loader!${entryFile}`;
+const request = `inline1-loader!inline2-loader!${entryFile}`;
 
 const rules = [
   {
@@ -72,7 +72,7 @@ function resolveLoader(loader) {
 }
 
 const resolvedLoaders = loaders.map(resolveLoader);
-
+debugger;
 runLoaders(
   {
     resource,

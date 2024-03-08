@@ -4,6 +4,7 @@ function loader(sourceCode) {
 }
 loader.pitch = function () {
   console.log("normal1-pitch");
+  return "normal1-pitch";
 };
 
 module.exports = loader;

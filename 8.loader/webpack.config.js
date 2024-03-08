@@ -29,9 +29,10 @@ module.exports = {
           //第一种方法
           loader: path.resolve("loaders", "babel-loader.js"),
           // 假如说我不在这里配置的话 就要在 .babelrc文件配置
-          // options: {
-          //   presets: ["@babel/preset-env"],
-          // },
+          // 我想让这里的配置生效
+          options: {
+            presets: ["@babel/preset-env"],
+          },
         },
       },
     ],
